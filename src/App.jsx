@@ -1,18 +1,21 @@
 import { useEffect } from 'react';
-import { connect } from 'react-redux';
-import { getAllTodo } from './redux/actions/todoActions';
-// eslint-disable-next-line react-refresh/only-export-components, react/prop-types
-const App = ({ getAllTodo }) => {
+import { useSelector, useDispatch } from 'react-redux';
+import { getAllTodo, mark } from './store/slices/userSlice';
+
+const App = () => {
+    const todos = useSelector((state) => state.todo);
+    console.log(todos);
+    const dispatch = useDispatch();
+
     useEffect(() => {
-        getAllTodo();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        dispatch(getAllTodo());
     }, []);
-    return <div>App</div>;
+    return (
+        <div>
+            <h1>App</h1>
+            <button onClick={() => dispatch(mark('Hello'))}>Click</button>
+        </div>
+    );
 };
-const mapStateToProps = (state) => {
-    return {
-        todos: state.todosState.todos,
-    };
-};
-// eslint-disable-next-line react-refresh/only-export-components
-export default connect(mapStateToProps, { getAllTodo })(App);
+
+export default App;
