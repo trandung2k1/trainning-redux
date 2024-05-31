@@ -1,43 +1,46 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
-    todos: [],
+    users: [],
     loading: false,
-    error: '',
-    msg: '',
+    error: false,
+    user: {},
 };
-export const getAllTodo = createAsyncThunk('todos/getAllTodo', async (_, { rejectWithValue }) => {
-    try {
-        const response = await axios(`https://jsonplaceholder.typicode.com/todos?_limit=10`);
-        return response.data;
-    } catch (error) {
-        return rejectWithValue(error.message);
-    }
-});
-const todoSlice = createSlice({
-    name: 'todos',
+const userSlice = createSlice({
+    name: 'user',
     initialState,
     reducers: {
-        mark: (state, action) => {
-            state.msg = action.payload;
-            console.error(action.payload);
-        },
-    },
-    extraReducers: (builder) => {
-        builder.addCase(getAllTodo.pending, (state) => {
+        getUsersStart: (state) => {
             state.loading = true;
-        });
-        builder.addCase(getAllTodo.fulfilled, (state, action) => {
+        },
+        getUsersSuccess: (state, action) => {
             state.loading = false;
-            state.todos = action.payload;
-        });
-        builder.addCase(getAllTodo.rejected, (state, action) => {
+            state.users = action.payload;
+        },
+        getUsersFailure: (state) => {
             state.loading = false;
-            state.error = action.payload;
-        });
+            state.error = true;
+        },
+        getUserStart: (state) => {
+            state.loading = true;
+        },
+        getUserSuccess: (state, action) => {
+            state.loading = false;
+            state.user = action.payload;
+        },
+        getUserFailure: (state) => {
+            state.loading = false;
+            state.error = true;
+        },
     },
 });
 
-export const { mark } = todoSlice.actions;
-const todoReducer = todoSlice.reducer;
-export default todoReducer;
+const userReducer = userSlice.reducer;
+export const {
+    getUsersStart,
+    getUsersSuccess,
+    getUsersFailure,
+    getUserStart,
+    getUserSuccess,
+    getUserFailure,
+} = userSlice.actions;
+export default userReducer;
